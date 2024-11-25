@@ -15,7 +15,18 @@ const KanBanBoard = () => {
     </div>
   )
 
-  function createColumn(){}
+  function createColumn(){
+    const columnToAdd:Column = {
+      id: generateId(),
+      title: `Column ${columns.length + 1}`,
+    }
+    
+    setColumns([...columns, columnToAdd])
+  }
+}
+
+function generateId() {
+  return Math.floor(Math.random() * 10001);
 }
 
 export default KanBanBoard
