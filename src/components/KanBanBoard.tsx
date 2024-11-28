@@ -2,8 +2,9 @@ import PlusIcon from "@/icons/PlusIcon"
 import { Column, Id } from "@/types"
 import { useMemo, useState } from "react"
 import ColumnContainer from "./ColumnContainer"
-import { DndContext } from "@dnd-kit/core"
+import { DndContext, DragOverlay, DragStartEvent } from "@dnd-kit/core"
 import { SortableContext } from "@dnd-kit/sortable"
+import { createPortal } from "react-dom"
 
 const KanBanBoard = () => {
   const [columns, setColumns] = useState<Column[]>([])
@@ -11,9 +12,11 @@ const KanBanBoard = () => {
     columns.map((col) => col.id), 
   [columns])
 
+  const [activeColumn, setActiveColumn] = useState<Column | null>(null)
+
   return (
     <div className="m-auto flex min-h-screen w-full items-center overflow-x-auto overflow-y-hidden px-[40px]">
-      <DndContext>
+      <DndContext onDragStart={onDragStart}>
         <div className="m-auto flex gap-4">
           <div className="flex gap-4">
             <SortableContext items={columnsId}>
@@ -26,6 +29,14 @@ const KanBanBoard = () => {
             <PlusIcon/> Add Column
           </button>
         </div>
+
+      {createPortal(
+        <DragOverlay>
+          {activeColumn && <ColumnContainer column={activeColumn} deleteColumn={deleteColumn} />}
+        </DragOverlay>,
+        document.body
+      )}
+
       </DndContext>
     </div>
   )
@@ -41,6 +52,13 @@ const KanBanBoard = () => {
 
   function deleteColumn(columnId: Id){
     setColumns(columns.filter(col => col.id!== columnId))
+  }
+
+  function onDragStart(event: DragStartEvent){
+    if(event.active.data.current?.type === "Column"){
+      setActiveColumn(event.active.data.current.column)
+      return;
+    }
   }
 }
 
