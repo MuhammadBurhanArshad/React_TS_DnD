@@ -1,5 +1,5 @@
 import PlusIcon from "@/icons/PlusIcon"
-import { Column, Id } from "@/types"
+import { Column, Id, Task } from "@/types"
 import { useMemo, useState } from "react"
 import ColumnContainer from "./ColumnContainer"
 import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core"
@@ -11,6 +11,8 @@ const KanBanBoard = () => {
   const columnsId = useMemo(() => 
     columns.map((col) => col.id), 
   [columns])
+
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   const [activeColumn, setActiveColumn] = useState<Column | null>(null)
 
@@ -29,7 +31,7 @@ const KanBanBoard = () => {
           <div className="flex gap-4">
             <SortableContext items={columnsId}>
               {columns.map(col => 
-                <ColumnContainer key={col.id} column={col} deleteColumn={deleteColumn} updateColumn={updateColumn}/>
+                <ColumnContainer key={col.id} column={col} deleteColumn={deleteColumn} updateColumn={updateColumn} createTask={createTask} tasks={tasks.filter(task  => task.columnId === col.id)} />
               )}
             </SortableContext>
           </div>
@@ -40,7 +42,7 @@ const KanBanBoard = () => {
 
       {createPortal(
         <DragOverlay>
-          {activeColumn && <ColumnContainer column={activeColumn} deleteColumn={deleteColumn} updateColumn={updateColumn} />}
+          {activeColumn && <ColumnContainer column={activeColumn} deleteColumn={deleteColumn} updateColumn={updateColumn} createTask={createTask} />}
         </DragOverlay>,
         document.body
       )}
@@ -48,6 +50,16 @@ const KanBanBoard = () => {
       </DndContext>
     </div>
   )
+
+  function createTask(columnId: Id){
+    const newTask: Task = {
+      id: generateId(),
+      columnId,
+      content: `Task ${tasks.length + 1}`
+    }
+
+    setTasks([...tasks, newTask])
+  }
 
   function createColumn(){
     const columnToAdd:Column = {
