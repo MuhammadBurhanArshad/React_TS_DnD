@@ -31,7 +31,7 @@ const KanBanBoard = () => {
           <div className="flex gap-4">
             <SortableContext items={columnsId}>
               {columns.map(col => 
-                <ColumnContainer key={col.id} column={col} deleteColumn={deleteColumn} updateColumn={updateColumn} createTask={createTask} tasks={tasks.filter(task  => task.columnId === col.id)} />
+                <ColumnContainer key={col.id} column={col} deleteColumn={deleteColumn} updateColumn={updateColumn} createTask={createTask} tasks={tasks.filter(task  => task.columnId === col.id)} deleteTask={deleteTask} />
               )}
             </SortableContext>
           </div>
@@ -42,7 +42,7 @@ const KanBanBoard = () => {
 
       {createPortal(
         <DragOverlay>
-          {activeColumn && <ColumnContainer column={activeColumn} deleteColumn={deleteColumn} updateColumn={updateColumn} createTask={createTask} />}
+          {activeColumn && <ColumnContainer tasks={tasks.filter(task  => task.columnId === activeColumn.id)} column={activeColumn} deleteColumn={deleteColumn} updateColumn={updateColumn} createTask={createTask} deleteTask={deleteTask}/>}
         </DragOverlay>,
         document.body
       )}
@@ -59,6 +59,11 @@ const KanBanBoard = () => {
     }
 
     setTasks([...tasks, newTask])
+  }
+
+  function deleteTask(id: Id){
+    const newTasks = tasks.filter(task => task.id !== id);
+    setTasks(newTasks);
   }
 
   function createColumn(){
