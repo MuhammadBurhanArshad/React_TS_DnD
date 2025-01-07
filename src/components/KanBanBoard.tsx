@@ -31,7 +31,7 @@ const KanBanBoard = () => {
           <div className="flex gap-4">
             <SortableContext items={columnsId}>
               {columns.map(col => 
-                <ColumnContainer key={col.id} column={col} deleteColumn={deleteColumn} updateColumn={updateColumn} createTask={createTask} tasks={tasks.filter(task  => task.columnId === col.id)} deleteTask={deleteTask} />
+                <ColumnContainer key={col.id} column={col} deleteColumn={deleteColumn} updateColumn={updateColumn} createTask={createTask} tasks={tasks.filter(task  => task.columnId === col.id)} deleteTask={deleteTask} updateTask={updateTask} />
               )}
             </SortableContext>
           </div>
