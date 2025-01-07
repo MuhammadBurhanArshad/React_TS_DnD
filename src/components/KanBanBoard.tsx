@@ -42,7 +42,7 @@ const KanBanBoard = () => {
 
       {createPortal(
         <DragOverlay>
-          {activeColumn && <ColumnContainer tasks={tasks.filter(task  => task.columnId === activeColumn.id)} column={activeColumn} deleteColumn={deleteColumn} updateColumn={updateColumn} createTask={createTask} deleteTask={deleteTask}/>}
+          {activeColumn && <ColumnContainer tasks={tasks.filter(task  => task.columnId === activeColumn.id)} column={activeColumn} deleteColumn={deleteColumn} updateColumn={updateColumn} createTask={createTask} deleteTask={deleteTask}  updateTask={updateTask} />}
         </DragOverlay>,
         document.body
       )}
@@ -64,6 +64,15 @@ const KanBanBoard = () => {
   function deleteTask(id: Id){
     const newTasks = tasks.filter(task => task.id !== id);
     setTasks(newTasks);
+  }
+
+  function updateTask(id: Id, content: string){
+    const newTasks = tasks.map((task) => {
+      if(task.id !== id) return task;
+      return {...task, content}
+    });
+
+    setTasks(newTasks)
   }
 
   function createColumn(){
