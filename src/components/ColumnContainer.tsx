@@ -1,7 +1,7 @@
 import PlusIcon from "@/icons/PlusIcon";
 import TrashIcon from "@/icons/TrashIcon";
 import { Column, Id, Task } from "@/types"
-import { useSortable } from "@dnd-kit/sortable";
+import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import {CSS} from "@dnd-kit/utilities"
 import { useState } from "react";
 import TaskCard from "./TaskCard";
@@ -68,6 +68,7 @@ function ColumnContainer(props: Props) {
         }} className="stroke-gray-500 hover:stroke-white hover:bg-columnBackgroundColor rounded px-1 py-2"><TrashIcon/></button>
       </div>
       <div className="flex flex-grow flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto">
+        <SortableContext></SortableContext>
         {tasks.map((task: Task) => (
           <TaskCard key={tasks.id} task={task} deleteTask={deleteTask} updateTask={updateTask} />
         ))}
