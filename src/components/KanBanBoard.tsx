@@ -90,6 +90,9 @@ const KanBanBoard = () => {
 
   function deleteColumn(columnId: Id){
     setColumns(columns.filter(col => col.id!== columnId))
+
+    const newTasks = tasks.filter(task => task.columnId!== columnId);
+    setTasks(newTasks);
   }
 
   function updateColumn(id: Id, title: string){
